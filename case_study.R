@@ -6,14 +6,11 @@ SEEDEX = 24
 PERMNUM = 10000
 METHOD = "TS"
 
-# directory setup
-INPUT_DATA = "data/DataMatrices_ScSubsets.dat"
 OUTDIR = "tables"
 DATA_DIR = "data"
 
-# load tables
-cat("[*] LOADING DATA ...", "\n")
-load(INPUT_DATA)
+# specific to this case data
+INPUT_DATA = "data/DataMatrices_ScSubsets.dat"
 TABLE_NAMES = c("sc.f19.blood", "sc.f19.decidua", "sc.f20.blood",  "sc.f20.decidua", "sc.f25.blood", "sc.f25.decidua", "sc.f27.blood", "sc.f27.decidua")
 # already run, don't recreate
 EXCLUDE = c()
@@ -31,7 +28,7 @@ wasserstein.sc.timed <- function(name, x, y) {
   # wasserstein.sc run
   cat("... wasserstein.sc test ", name, "\n")
   tic(paste("    Compuation: ", name))
-  result <- wasserstein.sc(data, condition=condition, seedex=SEEDEX, permnum=PERMNUM, method=METHOD)
+  result <- wasserstein.sc(data, condition=condition, permnum=PERMNUM, method=METHOD)
   toc()
   
   # write results
@@ -64,13 +61,16 @@ run_all_combinations <- function() {
 }
 
 if (!interactive()) {
-  
+
   stopifnot(all(dir.exists(c(DATA_DIR))))
 
   if (!dir.exists(OUTDIR)) {
     dir.create(OUTDIR)
   }
   
+  cat("[*] LOADING DATA ...", "\n")
+  load(INPUT_DATA)
+    
   cat("[*] RUNNING WASSERSTEIN TESTS ", "\n\n")  
   run_all_combinations()
 }
