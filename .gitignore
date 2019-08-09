@@ -1,3 +1,6 @@
+# ignore computation results
+table/*.csv
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

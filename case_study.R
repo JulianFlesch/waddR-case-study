@@ -4,16 +4,27 @@ library("tictoc")
 # parameters for each run
 SEEDEX = 24
 PERMNUM = 10000
-METHOD = "TS"
+METHOD = "OS"
 
-OUTDIR = "tables"
+OUTDIR = "tables/0.2.5"
 DATA_DIR = "data"
 
 # specific to this case data
 INPUT_DATA = "data/DataMatrices_ScSubsets.dat"
 TABLE_NAMES = c("sc.f19.blood", "sc.f19.decidua", "sc.f20.blood",  "sc.f20.decidua", "sc.f25.blood", "sc.f25.decidua", "sc.f27.blood", "sc.f27.decidua")
-# already run, don't recreate
-EXCLUDE = c()
+# TESTING SETUP
+EXCLUDE = c("sc_f19_bloodXsc_f19_decidua", "sc_f19_bloodXsc_f20_blood", "sc_f19_bloodXsc_f20_decidua",
+            "sc_f19_bloodXsc_f25_blood", "sc_f19_bloodXsc_f25_decidua", "sc_f19_bloodXsc_f27_blood",
+            "sc_f19_bloodXsc_f27_decidua", "sc_f19_deciduaXsc_f20_blood", "sc_f19_deciduaXsc_f20_decidua",
+            "sc_f19_deciduaXsc_f25_blood", "sc_f19_deciduaXsc_f25_decidua", "sc_f19_deciduaXsc_f27_blood",
+            "sc_f19_deciduaXsc_f27_decidua", "sc_f20_bloodXsc_f25_blood", 
+            "sc_f20_bloodXsc_f25_decidua", "sc_f20_bloodXsc_f27_blood", "sc_f20_bloodXsc_f27_decidua",
+            "sc_f20_deciduaXsc_f25_blood", "sc_f20_deciduaXsc_f25_decidua", "sc_f20_deciduaXsc_f27_blood",
+            "sc_f20_deciduaXsc_f27_decidua", "sc_f25_bloodXsc_f25_decidua", "sc_f25_bloodXsc_f27_blood", 
+            "sc_f25_bloodXsc_f27_decidua", "sc_f25_deciduaXsc_f27_blood", "sc_f25_deciduaXsc_f27_decidua", 
+            "sc_f27_bloodXsc_f27_decidua"
+#            , "sc_f20_bloodXsc_f20_decidua"
+) 
 
 wasserstein.sc.timed <- function(name, x, y) {
   stopifnot(dim(x)[1] == dim(y)[1])
