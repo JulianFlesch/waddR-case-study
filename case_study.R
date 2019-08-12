@@ -1,10 +1,12 @@
 library("waddR")
 library("tictoc")
 
+print(Sys.getpid())
+
 # parameters for each run
 SEEDEX = 24
-PERMNUM = 10000
-METHOD = "OS"
+PERMNUM = 10
+METHOD = "TS"
 
 OUTDIR = "tables/0.2.5"
 DATA_DIR = "data"
@@ -72,7 +74,7 @@ run_all_combinations <- function() {
 }
 
 if (!interactive()) {
-
+  print(Sys.getpid())
   stopifnot(all(dir.exists(c(DATA_DIR))))
 
   if (!dir.exists(OUTDIR)) {
