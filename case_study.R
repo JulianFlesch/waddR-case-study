@@ -1,32 +1,47 @@
 library("waddR")
 library("tictoc")
 
-print(Sys.getpid())
 
 # parameters for each run
-SEEDEX = 24
-PERMNUM = 10
+PERMNUM = 10000
 METHOD = "TS"
 
-OUTDIR = "tables/0.2.5"
+OUTDIR = "tables/0.2.8"
 DATA_DIR = "data"
 
 # specific to this case data
 INPUT_DATA = "data/DataMatrices_ScSubsets.dat"
 TABLE_NAMES = c("sc.f19.blood", "sc.f19.decidua", "sc.f20.blood",  "sc.f20.decidua", "sc.f25.blood", "sc.f25.decidua", "sc.f27.blood", "sc.f27.decidua")
 # TESTING SETUP
-EXCLUDE = c("sc_f19_bloodXsc_f19_decidua", "sc_f19_bloodXsc_f20_blood", "sc_f19_bloodXsc_f20_decidua",
-            "sc_f19_bloodXsc_f25_blood", "sc_f19_bloodXsc_f25_decidua", "sc_f19_bloodXsc_f27_blood",
-            "sc_f19_bloodXsc_f27_decidua", "sc_f19_deciduaXsc_f20_blood", "sc_f19_deciduaXsc_f20_decidua",
-            "sc_f19_deciduaXsc_f25_blood", "sc_f19_deciduaXsc_f25_decidua", "sc_f19_deciduaXsc_f27_blood",
-            "sc_f19_deciduaXsc_f27_decidua", "sc_f20_bloodXsc_f25_blood", 
-            "sc_f20_bloodXsc_f25_decidua", "sc_f20_bloodXsc_f27_blood", "sc_f20_bloodXsc_f27_decidua",
-            "sc_f20_deciduaXsc_f25_blood", "sc_f20_deciduaXsc_f25_decidua", "sc_f20_deciduaXsc_f27_blood",
-            "sc_f20_deciduaXsc_f27_decidua", "sc_f25_bloodXsc_f25_decidua", "sc_f25_bloodXsc_f27_blood", 
-            "sc_f25_bloodXsc_f27_decidua", "sc_f25_deciduaXsc_f27_blood", "sc_f25_deciduaXsc_f27_decidua", 
-            "sc_f27_bloodXsc_f27_decidua"
-#            , "sc_f20_bloodXsc_f20_decidua"
-) 
+EXCLUDE = c("sc_f19_bloodXsc_f19_decidua"
+	, "sc_f19_bloodXsc_f20_blood"
+	, "sc_f19_bloodXsc_f20_decidua"
+        , "sc_f19_bloodXsc_f25_blood"
+	, "sc_f19_bloodXsc_f25_decidua"
+	, "sc_f19_bloodXsc_f27_blood"
+        , "sc_f19_bloodXsc_f27_decidua"
+	, "sc_f19_deciduaXsc_f20_blood"
+	, "sc_f19_deciduaXsc_f20_decidua"
+        , "sc_f19_deciduaXsc_f25_blood"
+	, "sc_f19_deciduaXsc_f25_decidua"
+	, "sc_f19_deciduaXsc_f27_blood",
+        #, "sc_f19_deciduaXsc_f27_decidua"
+	, "sc_f20_bloodXsc_f25_blood" 
+        , "sc_f20_bloodXsc_f25_decidua"
+	, "sc_f20_bloodXsc_f27_blood"
+	, "sc_f20_bloodXsc_f27_decidua"
+        , "sc_f20_deciduaXsc_f25_blood"
+	, "sc_f20_deciduaXsc_f25_decidua"
+	, "sc_f20_deciduaXsc_f27_blood"
+        , "sc_f20_deciduaXsc_f27_decidua"
+	, "sc_f25_bloodXsc_f25_decidua"
+	, "sc_f25_bloodXsc_f27_blood" 
+        , "sc_f25_bloodXsc_f27_decidua"
+	, "sc_f25_deciduaXsc_f27_blood"
+	, "sc_f25_deciduaXsc_f27_decidua" 
+        , "sc_f27_bloodXsc_f27_decidua"
+        , "sc_f20_bloodXsc_f20_decidua"
+)
 
 wasserstein.sc.timed <- function(name, x, y) {
   stopifnot(dim(x)[1] == dim(y)[1])
@@ -36,12 +51,11 @@ wasserstein.sc.timed <- function(name, x, y) {
   x.num_cells <- dim(x)[2]
   y.num_cells <- dim(y)[2]
   
-  condition <- c(rep(1,x.num_cells), rep(2,y.num_cells))
-  
+  cond <- c(rep(1,x.num_cells), rep(2,y.num_cells))
   # wasserstein.sc run
   cat("... wasserstein.sc test ", name, "\n")
-  tic(paste("    Compuation: ", name))
-  result <- wasserstein.sc(data, condition=condition, permnum=PERMNUM, method=METHOD)
+  tic(paste("    Compuation"))
+  result <- wasserstein.sc(data, cond, permnum=PERMNUM, method=METHOD)
   toc()
   
   # write results
@@ -49,7 +63,7 @@ wasserstein.sc.timed <- function(name, x, y) {
    name = paste0(name, ".csv")
   }
   outfile = file.path(OUTDIR, name)
-  tic(paste("    Writing results:"))
+  tic(paste("    Writing results"))
   write.table(x=result, file=outfile, col.names=TRUE, dec=".")
   toc()
   cat("\n")
@@ -74,7 +88,8 @@ run_all_combinations <- function() {
 }
 
 if (!interactive()) {
-  print(Sys.getpid())
+  cat(paste0("Process ID: ", Sys.getpid(),"\n"))
+
   stopifnot(all(dir.exists(c(DATA_DIR))))
 
   if (!dir.exists(OUTDIR)) {
